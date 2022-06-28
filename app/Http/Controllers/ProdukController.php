@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Produk;
+use App\Models\Kategori;
 
 class ProdukController extends Controller
 {
@@ -14,12 +15,16 @@ class ProdukController extends Controller
      */
     public function index()
     {
-        return view('produk.index');
+        $kategori = Kategori::all()->pluck('nama_kategori', 'id_kategori');
+        return view('produk.index', compact('kategori'));
     }
     
     public function data()
     {
-        $produk = Produk::orderBy('id_produk', 'desc')->get();
+        $produk = Produk::leftJoin('kategori', 'kategori.id_kategori', 'produk.id_kategori')
+            ->select('produk.*', 'nama_kategori')
+            ->orderBy('id_produk', 'desc')
+            ->get();
 
         return datatables()
             ->of($produk)
@@ -54,9 +59,9 @@ class ProdukController extends Controller
      */
     public function store(Request $request)
     {
-        $kategori = new Kategori();
-        $kategori->nama_kategori = $request->nama_kategori;
-        $kategori->save();
+        $produk = Produk::latest()->first();
+        $request ['kode_produk'] = 'P-'. tambah_nol_didepan((int)$produk->id_produk +1, 6);
+        $produk = Produk::create($request->all());
 
         return response()->json('Data berhasil disimpan', 200);
     }

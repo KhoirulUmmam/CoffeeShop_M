@@ -17,7 +17,7 @@
         <div class="col-md-12">
           <div class="card">
             <div class="card-header">
-              <button onclick="addForm('{{ route('kategori.store') }}')" class="btn btn-success btn-flat float-right"><i class="nav-icon fa fa-plus-circle"></i> Tambah</button>
+              <button onclick="addForm('{{ route('produk.store') }}')" class="btn btn-success btn-flat float-right"><i class="nav-icon fa fa-plus-circle"></i> Tambah</button>
 
             </div>
             <!-- /.card-header -->
@@ -62,7 +62,7 @@
                 {data: 'DT_RowIndex', searchable: false, sortable: false},
                 {data: 'kode_produk'},
                 {data: 'nama_produk'},
-                {data: 'kategori'},
+                {data: 'nama_kategori'},
                 {data: 'merk'},
                 {data: 'harga_jual'},
                 {data: 'harga_beli'},
@@ -94,7 +94,7 @@
         $('#modal-form form')[0].reset();
         $('#modal-form form').attr('action', url);
         $('#modal-form [name=_method]').val('post');
-        $('#modal-form [name=nama_kategori]').focus();
+        $('#modal-form [name=nama_produk]').focus();
         
     }
 
@@ -105,7 +105,7 @@
         $('#modal-form form')[0].reset();
         $('#modal-form form').attr('action', url);
         $('#modal-form [name=_method]').val('put');
-        $('#modal-form [name=nama_kategori]').focus();
+        $('#modal-form [name=nama_produk]').focus();
 
         $.get(url)
             .done((response) => {

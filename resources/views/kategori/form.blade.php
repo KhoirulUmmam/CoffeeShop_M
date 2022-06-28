@@ -20,7 +20,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-sm btn-flat btn-primary">Simpan</button>
-                    <button type="button" class="btn btn-sm btn-flat btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-sm btn-flat btn-danger" data-bs-dismiss="modal">Batal</button>
                 </div>
             </div>
         </form>   

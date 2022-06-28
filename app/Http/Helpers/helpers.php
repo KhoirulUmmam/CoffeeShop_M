@@ -52,6 +52,10 @@ function tanggal_indonesia($tgl, $tampil_hari = true){
         $text .= "$tanggal $bulan $tahun";
     }
 
-    return $text;
-   
+    return $text;  
+}
+
+function tambah_nol_didepan($value, $threshold = null){
+
+    return sprintf("%". $threshold . "s", $value);
 }
