@@ -23,12 +23,26 @@ class ProdukController extends Controller
     {
         $produk = Produk::leftJoin('kategori', 'kategori.id_kategori', 'produk.id_kategori')
             ->select('produk.*', 'nama_kategori')
-            ->orderBy('id_produk', 'desc')
+            ->orderBy('kode_produk', 'asc')
             ->get();
 
         return datatables()
             ->of($produk)
             ->addIndexColumn()
+            ->addColumn('select_all', function($produk) {
+                return '
+                    <input type="checkbox" name="id_produk[]" value="'. $produk->id_produk .'">
+                ';
+            })
+            ->addColumn('kode_produk', function($produk) {
+                return '<span class="badge badge-success">'. $produk->kode_produk .'</span>';
+            })
+            ->addColumn('harga_beli', function($produk) {
+                return format_uang($produk->harga_beli);
+            })
+            ->addColumn('harga_jual', function($produk) {
+                return format_uang($produk->harga_jual);
+            })
             ->addColumn('aksi', function($produk) {
                 return '
                 <div class="btn-group">
@@ -37,7 +51,7 @@ class ProdukController extends Controller
                 </div>
                 ';
             })
-            ->rawColumns(['aksi'])
+            ->rawColumns(['aksi', 'kode_produk', 'select_all'])
             ->make(true);
            
     }
@@ -60,7 +74,7 @@ class ProdukController extends Controller
     public function store(Request $request)
     {
         $produk = Produk::latest()->first();
-        $request ['kode_produk'] = 'P-'. tambah_nol_didepan((int)$produk->id_produk +1, 6);
+        $request['kode_produk'] = 'P'. tambah_nol_didepan((int)$produk->id_produk +1, 6);
         $produk = Produk::create($request->all());
 
         return response()->json('Data berhasil disimpan', 200);
@@ -74,9 +88,9 @@ class ProdukController extends Controller
      */
     public function show($id)
     {
-        $kategori = Kategori::find($id);
+        $produk = Produk::find($id);
 
-        return response()->json($kategori);
+        return response()->json($produk);
     }
 
     /**
@@ -99,9 +113,8 @@ class ProdukController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $kategori = Kategori::find($id);
-        $kategori->nama_kategori = $request->nama_kategori;
-        $kategori->update();
+        $produk = Produk::find($id);
+        $produk->update($request->all());
 
         return response()->json('Data berhasil disimpan', 200);
     }
@@ -114,9 +127,24 @@ class ProdukController extends Controller
      */
     public function destroy($id)
     {
-        $kategori = Kategori::find($id);
-        $kategori->delete();
+        $produk = Produk::find($id);
+        $produk->delete();
 
         return response(null, 204);
+    }
+    
+    public function deleteSelected(Request $request){
+       
+        foreach ($request->id_produk as $id) {
+            $produk = Produk::find($id);
+
+            $produk->delete();
+        }
+
+        return response(null, 204);
+    }
+
+    public function cetakBarcode(Request $request) {
+        return $request;
     }
 }

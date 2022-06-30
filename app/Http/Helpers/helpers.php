@@ -57,5 +57,5 @@ function tanggal_indonesia($tgl, $tampil_hari = true){
 
 function tambah_nol_didepan($value, $threshold = null){
 
-    return sprintf("%". $threshold . "s", $value);
+    return sprintf("%0". $threshold . "s", $value);
 }
