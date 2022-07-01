@@ -1,12 +1,12 @@
 @extends('layouts.master')
 
 @section('title')
-    Produk
+    Pengeluaran
 @endsection
 
 @section('breadcrumb')
     @parent
-    <li class="breadcrumb-item active">Daftar Produk</li>
+    <li class="breadcrumb-item active">Pengeluaran</li>
 @endsection
 
 @section('content')
@@ -17,23 +17,19 @@
         <div class="col-md-12">
           <div class="card">
             <div class="card-header">
-              <button onclick="addForm('{{ route('produk.store') }}')" class="btn btn-success btn-flat float-right"><i class="nav-icon fa fa-plus-circle"></i> Tambah</button>
+              <button onclick="addForm('{{ route('pengeluaran.store') }}')" class="btn btn-success btn-flat float-right"><i class="nav-icon fa fa-plus-circle"></i> Tambah</button>
 
             </div>
             <!-- /.card-header -->
             <div class="card-body table-responsive">
                 <table class="table table-stipe table-bordered">
-                    <thead align="center">
-                        <th scope="col" width="5%">No</th>
-                        <th scope="col">Kode Produk</th>
-                        <th scope="col">Nama Produk</th>
-                        <th scope="col">Kategori</th>
-                        <th scope="col">Harga Beli</th>
-                        <th scope="col">Harga Jual</th>
-                        <th scope="col">Diskon</th>
-                        <th scope="col">Stok</th>
-                        <th scope="col" width="15%">Aksi <i class="nav-icon fa fa-cogs"></i></th>
-                    </thead>
+                        <thead align="center">
+                            <th scope="col" width="5%">No</th>
+                            <th scope="col">Tanggal</th>
+                            <th scope="col">Jenis Pengeluaran</th>
+                            <th scope="col">Nominal</th>
+                            <th scope="col" width="15%">Aksi <i class="nav-icon fa fa-cogs"></i></th>
+                        </thead>
                 </table>
             </div>
           </div>
@@ -41,7 +37,7 @@
       </div>
   </div>
 
-@include('produk.form')
+@include('pengeluaran.form')
 @endsection
 
 @push('scripts')
@@ -53,18 +49,13 @@
             processing: true,
             autoWidth: false,
             ajax:{
-                url: '{{ route('produk.data') }}',
+                url: '{{ route('pengeluaran.data') }}',
             },
             columns: [
                 {data: 'DT_RowIndex', searchable: false, sortable: false},
-                {data: 'kode_produk'},
-                {data: 'nama_produk'},
-                {data: 'nama_kategori'},
-                {data: 'merk'},
-                {data: 'harga_beli'},
-                {data: 'harga_jual'},
-                {data: 'diskon'},
-                {data: 'stok'},
+                {data: 'created_at'},
+                {data: 'deskripsi'},
+                {data: 'nominal'},
                 {data: 'aksi', searchable: false, sortable: false},
             ]
         });
@@ -79,40 +70,35 @@
                 .fail((errors) => {
                     alert('Gagal menyimpan data');
                     return;
-                })
+                });
             }
         });
     });
 
     function addForm(url) {
         $('#modal-form').modal('show');
-        $('#modal-form .modal-title').text('Tambah Produk');
+        $('#modal-form .modal-title').text('Tambah Pengeluaran');
 
         $('#modal-form form')[0].reset();
         $('#modal-form form').attr('action', url);
         $('#modal-form [name=_method]').val('post');
-        $('#modal-form [name=nama_produk]').focus();
+        $('#modal-form [name=deskripsi]').focus();
         
     }
 
     function editForm(url) {
         $('#modal-form').modal('show');
-        $('#modal-form .modal-title').text('Edit Produk');
+        $('#modal-form .modal-title').text('Edit Pengeluaran');
 
         $('#modal-form form')[0].reset();
         $('#modal-form form').attr('action', url);
         $('#modal-form [name=_method]').val('put');
-        $('#modal-form [name=nama_produk]').focus();
+        $('#modal-form [name=deskripsi]').focus();
 
         $.get(url)
             .done((response) => {
-                $('#modal-form [name=nama_produk]').val(response.nama_produk);
-                $('#modal-form [name=id_kategori]').val(response.id_kategori);
-                $('#modal-form [name=merk]').val(response.merk);
-                $('#modal-form [name=harga_beli]').val(response.harga_beli);
-                $('#modal-form [name=harga_jual]').val(response.harga_jual);
-                $('#modal-form [name=diskon]').val(response.diskon);
-                $('#modal-form [name=stok]').val(response.stok);
+                $('#modal-form [name=deskripsi]').val(response.deskripsi);
+                $('#modal-form [name=nominal]').val(response.nominal);
             })
             .fail((errors) => {
                 alert('Data tidak dapat ditampilkan');

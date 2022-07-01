@@ -43,13 +43,13 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="{{ route('konsumen.index') }}" class="nav-link">
                     <i class="nav-icon fa fa-id-card"></i>
                     <p>Konsumen</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="{{ route('supplier.index') }}" class="nav-link">
                     <i class="nav-icon fa fa-truck"></i>
                     <p>Supplier</p>
                 </a>
@@ -57,13 +57,13 @@
 
               <li class="nav-header">TRANSAKSI</li>
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="{{ route('pengeluaran.index') }}" class="nav-link">
                     <i class="nav-icon fa fa-coins"></i>
                     <p>Pengeluaran</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="{{ route('pembelian.index') }}" class="nav-link">
                     <i class="nav-icon fa fa-download"></i>
                     <p>Pembelian</p>
                 </a>

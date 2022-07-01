@@ -1,12 +1,12 @@
 @extends('layouts.master')
 
 @section('title')
-    Produk
+    Konsumen
 @endsection
 
 @section('breadcrumb')
     @parent
-    <li class="breadcrumb-item active">Daftar Produk</li>
+    <li class="breadcrumb-item active">Konsumen</li>
 @endsection
 
 @section('content')
@@ -17,23 +17,26 @@
         <div class="col-md-12">
           <div class="card">
             <div class="card-header">
-              <button onclick="addForm('{{ route('produk.store') }}')" class="btn btn-success btn-flat float-right"><i class="nav-icon fa fa-plus-circle"></i> Tambah</button>
+                {{-- <button onclick="cetakKonsumen('{{ route('konsumen.cetak_konsumen') }}')" class="btn btn-info btn-flat float-right"><i class="nav-icon fa fa-id-card"> Cetak Kartu</i></button> --}}
+              <button onclick="addForm('{{ route('konsumen.store') }}')" class="btn btn-success btn-flat float-right"><i class="nav-icon fa fa-plus-circle"></i> Tambah</button>
 
             </div>
             <!-- /.card-header -->
             <div class="card-body table-responsive">
                 <table class="table table-stipe table-bordered">
-                    <thead align="center">
-                        <th scope="col" width="5%">No</th>
-                        <th scope="col">Kode Produk</th>
-                        <th scope="col">Nama Produk</th>
-                        <th scope="col">Kategori</th>
-                        <th scope="col">Harga Beli</th>
-                        <th scope="col">Harga Jual</th>
-                        <th scope="col">Diskon</th>
-                        <th scope="col">Stok</th>
-                        <th scope="col" width="15%">Aksi <i class="nav-icon fa fa-cogs"></i></th>
-                    </thead>
+                    <form action="" method="post" class="form-konsumen">
+                        @csrf
+                        <thead align="center">
+                            <th width="5%">
+                                <input type="checkbox" name="select_all" id="select_all">
+                            </th>
+                            <th scope="col" width="5%">No</th>
+                            <th scope="col" width="15%">Kode Konsumen</th>
+                            <th scope="col">Konsumen</th>
+                            <th scope="col">Telepon</th>
+                            <th scope="col" width="15%">Aksi <i class="nav-icon fa fa-cogs"></i></th>
+                        </thead>
+                    </form>
                 </table>
             </div>
           </div>
@@ -41,7 +44,7 @@
       </div>
   </div>
 
-@include('produk.form')
+@include('konsumen.form')
 @endsection
 
 @push('scripts')
@@ -53,18 +56,14 @@
             processing: true,
             autoWidth: false,
             ajax:{
-                url: '{{ route('produk.data') }}',
+                url: '{{ route('konsumen.data') }}',
             },
             columns: [
+                {data: 'select_all', searchable: false, sortable: false},
                 {data: 'DT_RowIndex', searchable: false, sortable: false},
-                {data: 'kode_produk'},
-                {data: 'nama_produk'},
-                {data: 'nama_kategori'},
-                {data: 'merk'},
-                {data: 'harga_beli'},
-                {data: 'harga_jual'},
-                {data: 'diskon'},
-                {data: 'stok'},
+                {data: 'kode_konsumen'},
+                {data: 'nama'},
+                {data: 'telepon'},
                 {data: 'aksi', searchable: false, sortable: false},
             ]
         });
@@ -79,40 +78,39 @@
                 .fail((errors) => {
                     alert('Gagal menyimpan data');
                     return;
-                })
+                });
             }
+        });
+
+        $('[name=select_all]').on('click', function(){
+            $(':checkbox').prop('checked', this.checked);
         });
     });
 
     function addForm(url) {
         $('#modal-form').modal('show');
-        $('#modal-form .modal-title').text('Tambah Produk');
+        $('#modal-form .modal-title').text('Tambah Konsumen');
 
         $('#modal-form form')[0].reset();
         $('#modal-form form').attr('action', url);
         $('#modal-form [name=_method]').val('post');
-        $('#modal-form [name=nama_produk]').focus();
+        $('#modal-form [name=nama]').focus();
         
     }
 
     function editForm(url) {
         $('#modal-form').modal('show');
-        $('#modal-form .modal-title').text('Edit Produk');
+        $('#modal-form .modal-title').text('Edit Konsumen');
 
         $('#modal-form form')[0].reset();
         $('#modal-form form').attr('action', url);
         $('#modal-form [name=_method]').val('put');
-        $('#modal-form [name=nama_produk]').focus();
+        $('#modal-form [name=nama]').focus();
 
         $.get(url)
             .done((response) => {
-                $('#modal-form [name=nama_produk]').val(response.nama_produk);
-                $('#modal-form [name=id_kategori]').val(response.id_kategori);
-                $('#modal-form [name=merk]').val(response.merk);
-                $('#modal-form [name=harga_beli]').val(response.harga_beli);
-                $('#modal-form [name=harga_jual]').val(response.harga_jual);
-                $('#modal-form [name=diskon]').val(response.diskon);
-                $('#modal-form [name=stok]').val(response.stok);
+                $('#modal-form [name=nama]').val(response.nama);
+                $('#modal-form [name=telepon]').val(response.telepon);
             })
             .fail((errors) => {
                 alert('Data tidak dapat ditampilkan');
@@ -134,6 +132,15 @@
                 alert('Tidak dapat menghapus data');
                 return;
             });
+        }
+    }
+
+    function cetakKonsumen(url) {
+        if($('input:checked').length < 1){
+            alert('Pilih data yang ingin Anda cetak!');
+            return;
+        } else {
+            $('.form-konsumen').attr('target', '_blank').attr('action', url).submit();
         }
     }
 </script>
